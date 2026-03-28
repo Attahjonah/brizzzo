@@ -2,6 +2,31 @@
 
 A scalable real-time messaging backend built with Node.js, TypeScript, Express, Socket.IO, MySQL, and Redis.
 
+## 📊 Implementation Status
+
+### ✅ **Fully Implemented**
+- Real-time messaging with WebSocket
+- Message status tracking (sent → delivered → read)
+- Horizontal scaling with Redis adapter
+- Load balancing with nginx
+- Redis caching with TTL
+- JWT authentication for REST API
+- Rate limiting
+- MySQL database with connection pooling
+- Docker containerization
+- Comprehensive API documentation
+
+### 🚧 **Partially Implemented**
+- WebSocket authentication (bypassed for development)
+
+### 📋 **Planned/Not Implemented**
+- Automated testing suite
+- SSL/TLS configuration
+- Advanced monitoring and metrics
+- Database backup automation
+- Message encryption
+- Production deployment scripts
+
 ## 🚀 Features
 
 - **Real-time Messaging**: WebSocket-based instant messaging with Socket.IO
@@ -12,6 +37,14 @@ A scalable real-time messaging backend built with Node.js, TypeScript, Express, 
 - **Rate Limiting**: API rate limiting for security
 - **Database**: MySQL with connection pooling
 - **Containerized**: Docker + Docker Compose setup
+
+## 🚧 Planned Features
+
+- **WebSocket Authentication**: Token verification for WebSocket connections (currently bypassed)
+- **Automated Testing**: Unit and integration tests (Jest configured but no tests written)
+- **SSL/TLS**: HTTPS configuration for production
+- **Advanced Monitoring**: Metrics collection and alerting
+- **Message Encryption**: End-to-end encryption for messages
 
 ## 🏗️ Architecture
 
@@ -131,6 +164,8 @@ Authorization: Bearer <token>
 
 ## 🔌 WebSocket Events
 
+**⚠️ Note**: WebSocket authentication is currently bypassed for development. Token verification needs to be implemented for production use.
+
 Connect to WebSocket server with authentication:
 
 ```javascript
@@ -195,6 +230,8 @@ socket.on('messagesRead', (data) => {
 
 ## 🧪 Testing
 
+**⚠️ Note**: Testing framework is configured but no tests have been written yet.
+
 ### Load Balancing Test
 ```powershell
 for ($i = 1; $i -le 10; $i++) {
@@ -231,8 +268,15 @@ npm run build
 npm start
 ```
 
+### Testing
+```bash
+npm test  # Jest is configured but no tests written yet
+```
+
 ### Database Schema
 The `init.sql` file contains the database schema. Tables are created automatically when MySQL container starts.
+
+**Current Status**: This is a functional MVP with core messaging features implemented. Ready for frontend integration and further development.
 
 ## 🔧 Configuration
 
@@ -281,11 +325,13 @@ docker-compose exec redis redis-cli
 ## 🚀 Deployment
 
 ### Production Considerations
-1. **Environment Variables**: Set strong secrets for JWT and database
-2. **SSL/TLS**: Configure HTTPS in nginx
-3. **Scaling**: Add more app instances to docker-compose.yml
-4. **Monitoring**: Implement logging and metrics
-5. **Backup**: Set up database backups
+1. ✅ **Environment Variables**: Set strong secrets for JWT and database
+2. 🚧 **SSL/TLS**: Configure HTTPS in nginx (not implemented)
+3. ✅ **Scaling**: Add more app instances to docker-compose.yml
+4. 🚧 **Monitoring**: Implement logging and metrics (basic logging only)
+5. 🚧 **Backup**: Set up database backups (not implemented)
+6. 🚧 **WebSocket Auth**: Implement proper token verification
+7. 🚧 **Testing**: Write comprehensive test suite
 
 ### Scaling App Instances
 ```yaml
@@ -323,10 +369,15 @@ ISC License
 **WebSocket Not Working**
 - Confirm Socket.IO client is connecting to correct port
 - Check nginx WebSocket proxy configuration
+- **Note**: WebSocket authentication is currently bypassed
 
 **Load Balancing Not Working**
 - Verify both app containers are running
 - Check nginx upstream configuration
+
+**Tests Not Running**
+- No test files have been written yet
+- Jest is configured but test suite is empty
 
 ### Debug Commands
 ```bash
