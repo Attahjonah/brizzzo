@@ -15,9 +15,11 @@ A scalable real-time messaging backend built with Node.js, TypeScript, Express, 
 - MySQL database with connection pooling
 - Docker containerization
 - Comprehensive API documentation
+- **Frontend application for testing**
 
 ### 🚧 **Partially Implemented**
 - WebSocket authentication (bypassed for development)
+- Automated testing suite (Jest configured, basic API test script included)
 
 ### 📋 **Planned/Not Implemented**
 - Automated testing suite
@@ -228,9 +230,38 @@ socket.on('messagesRead', (data) => {
 });
 ```
 
+## 🎨 Frontend
+
+A modern, responsive frontend is included for testing and demonstration purposes.
+
+### Features
+- User authentication (login/register)
+- Real-time messaging interface
+- Message status indicators (sent/delivered/read)
+- Responsive design for desktop and mobile
+- WebSocket integration for instant messaging
+
+### Setup
+1. Ensure backend services are running
+2. Open `frontend/index.html` in a web browser
+3. Register or login to start messaging
+
+### Testing the Full Application
+1. Start backend: `docker-compose up -d`
+2. Open `frontend/index.html` in multiple browser tabs
+3. Register different users in each tab
+4. Test real-time messaging between users
+5. Verify message status updates work correctly
+
+### Frontend Technologies
+- HTML5, CSS3, JavaScript (ES6+)
+- Socket.IO client for WebSocket communication
+- Responsive design with modern CSS
+
 ## 🧪 Testing
 
-**⚠️ Note**: Testing framework is configured but no tests have been written yet.
+### API Testing Script
+A basic API testing script is included (`test-api.js`) to verify backend functionality. Open it in a browser console or run as a Node.js script.
 
 ### Load Balancing Test
 ```powershell

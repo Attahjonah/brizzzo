@@ -4,7 +4,7 @@ import { Message } from '../models/Message';
 
 export async function sendMessage(senderId: number, receiverId: number, content: string): Promise<Message> {
   const db = getDB();
-  const [result] = await db.execute(
+  const [result] = await db.query(
     'INSERT INTO messages (sender_id, receiver_id, content, status) VALUES (?, ?, ?, ?)',
     [senderId, receiverId, content, 'sent']
   );
@@ -32,7 +32,7 @@ export async function getMessages(userId1: number, userId2: number): Promise<Mes
     return JSON.parse(cached);
   }
   const db = getDB();
-  const [rows] = await db.execute(
+  const [rows] = await db.query(
     'SELECT id, sender_id as senderId, receiver_id as receiverId, content, timestamp, status, delivered_at as deliveredAt, read_at as readAt FROM messages WHERE (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?) ORDER BY timestamp ASC',
     [userId1, userId2, userId2, userId1]
   );

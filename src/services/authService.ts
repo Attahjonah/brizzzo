@@ -28,10 +28,16 @@ export async function loginUser(email: string, password: string): Promise<string
   return token;
 }
 
+export async function getUsers(): Promise<User[]> {
+  const db = getDB();
+  const [rows] = await db.execute('SELECT id, username, email, created_at FROM users ORDER BY username');
+  return rows as User[];
+}
+
 export function verifyToken(token: string): any {
   try {
     return jwt.verify(token, JWT_SECRET);
-  } catch {
+  } catch (error) {
     return null;
   }
 }

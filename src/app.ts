@@ -7,10 +7,16 @@ import { authLimiter, apiLimiter } from './middleware/rateLimiter';
 
 const app = express();
 
+// Trust proxy for rate limiting behind nginx
+app.set('trust proxy', 1);
+
 // Middleware
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+
+// Serve static frontend files
+app.use(express.static('frontend'));
 
 // Rates
 app.use('/api/v1/auth', authLimiter);

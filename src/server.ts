@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import app from './app';
 import { connectDB } from './config/database';
 import { connectRedis, redisClient } from './config/redis';
@@ -38,17 +39,40 @@ async function startServer() {
       next();
     });
 
+    // Track online users (userId -> socket.id[])
+    const onlineUsers = new Map();
+
+    function broadcastOnlineUsers() {
+      io.emit('onlineUsers', Array.from(onlineUsers.keys()));
+    }
+
     io.on('connection', (socket) => {
       console.log('User connected:', socket.id);
+      let joinedUserId: string | null = null;
 
-      socket.on('join', (userId) => {
+      socket.on('join', (userId: string) => {
         socket.join(`user_${userId}`);
+        joinedUserId = userId;
+        // Add to online users
+        if (!onlineUsers.has(userId)) {
+          onlineUsers.set(userId, new Set());
+        }
+        onlineUsers.get(userId).add(socket.id);
+        broadcastOnlineUsers();
       });
 
       socket.on('sendMessage', async (data) => {
         // Handle message sending via WebSocket
-        // Emit to receiver
-        io.to(`user_${data.receiverId}`).emit('newMessage', data);
+        // Emit to receiver with proper message format
+        const messageData = {
+          id: data.id || Date.now(), // Use ID from API if available
+          senderId: joinedUserId,
+          receiverId: data.receiverId,
+          content: data.content,
+          timestamp: new Date(),
+          status: 'delivered' // Mark as delivered when received via WebSocket
+        };
+        io.to(`user_${data.receiverId}`).emit('newMessage', messageData);
       });
 
       socket.on('markAsDelivered', async (data) => {
@@ -67,6 +91,13 @@ async function startServer() {
 
       socket.on('disconnect', () => {
         console.log('User disconnected:', socket.id);
+        if (joinedUserId && onlineUsers.has(joinedUserId)) {
+          onlineUsers.get(joinedUserId).delete(socket.id);
+          if (onlineUsers.get(joinedUserId).size === 0) {
+            onlineUsers.delete(joinedUserId);
+          }
+          broadcastOnlineUsers();
+        }
       });
     });
 
